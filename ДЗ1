@@ -1,0 +1,90 @@
+print('Введите этементы множеста через пробел, в конце нажмите Enter')
+try:
+    mn1 = set(map(float, input().split()))
+
+    for des in mn1:
+
+        if des >= 0:
+
+            if des - int(des) == 0:
+                dv = ''
+                des = int(des)
+                print(des, end='\t \t')
+
+                while des > 0:
+                    dv = str(des%2) + dv
+                    des //= 2
+
+
+            else:
+                ts = ''
+                print(des, end='\t \t')
+                nach = int(des)
+                kon = des - nach
+
+                while nach > 0:
+                    ts = str(nach % 2) + ts
+                    nach //= 2
+
+                dr = '.'
+                for i in range(3):
+                    kon *= 2
+                    dig = int(kon)
+                    kon -= dig
+                    dr += str(dig)
+                dv = ts + dr
+
+            print(dv)
+
+        if des < 0:
+            des = abs(des)
+
+            if des - int(des) == 0:
+                dv = ''
+                des = int(des)
+                print(des, end='\t \t')
+
+                while des > 0:
+                    dv = str(des % 2) + dv
+                    des //= 2
+
+
+            else:
+                ts = ''
+                print(des, end='\t \t')
+                nach = int(des)
+                kon = des - nach
+
+                while nach > 0:
+                    ts = str(nach % 2) + ts
+                    nach //= 2
+
+                dr = '.'
+                for i in range(3):
+                    kon *= 2
+                    dig = int(kon)
+                    kon -= dig
+                    dr += str(dig)
+                dv = ts + dr
+
+
+            print('-', dv, sep='')
+
+
+            
+except:
+    print('Кажется был введен неизвестный символ')
+    print('Хотите посмотреть правила ввода? y/n')
+    otv = input()
+
+    if otv == 'y':
+        print('Программа работает с положительными и отрицательными, целыми и дробными числами')
+        print('Числа записываются в одну строку через пробел')
+        print('Перед отрицательными числами пишется символ \'-\'')
+        print('Дробные числа имеют десятичный вид, пишутся через точку')
+
+    elif otv == 'n':
+        print('Если хотите продолжить, запустите программу еще раз')
+
+    else:
+        print('Вы ввели непонятный ответ, попробуйте запустить программу заново')
