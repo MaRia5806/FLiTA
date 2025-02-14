@@ -17,7 +17,7 @@ def transfer_fract(decimal):                                            # фун
 
 
 print('Введите элементы множеста через пробел, в конце нажмите Enter')
-try:                                                                    # сама программа, где
+try:
     plenty = set(map(float, input().split()))
     print('Десятичная', 'Двоичная', sep='\t \t')
 
@@ -34,10 +34,10 @@ try:                                                                    # сам
                 start = int(number)                                     # переводятся смешанные положительные числа
                 end = number - int(number)
 
-                tseloe = transfer_int(start)
-                drob = transfer_fract(end)
+                start_binary = transfer_int(start)
+                end_binary = transfer_fract(end)
 
-                binary = tseloe + drob
+                binary = star_binary + end_binary
                 print(number, binary, sep='\t \t')
 
         elif number < 0:
@@ -53,18 +53,19 @@ try:                                                                    # сам
                 start = int(number)
                 end = number - int(number)
 
-                tseloe = transfer_int(start)
-                drob = transfer_fract(end)
+                tstart_binary = transfer_int(start)
+                end_binary = transfer_fract(end)
 
-                binary = tseloe + drob
+                binary = star_binary + end_binary
                 print('-', number, sep='', end='\t \t')
                 print('-', binary, sep='')
 
 
 
-except:                                                               # то, что выводится в случае ошибки
-    print('Кажется был введен неподходящий символ')
-    print('Хотите посмотреть правила ввода? y/n')
+except:                                                                # вывод в случае ошибки
+    print('Кажется, был введен неподходящий символ')
+    print('Хотите посмотреть правила ввода?')
+    print('Введите \'y\' в случае согласия и \'n\' в случае отказа')
     answ = input()
 
     if answ == 'y':
