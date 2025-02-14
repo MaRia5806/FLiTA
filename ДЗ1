@@ -1,89 +1,79 @@
-print('Введите этементы множеста через пробел, в конце нажмите Enter')
-try:
-    mn1 = set(map(float, input().split()))
+def transfer_int(decimal):                                             # функция перевода целой части числа
+    binary = ''
+    while decimal > 0:
+        binary = str(decimal % 2) + binary
+        decimal //= 2
+    return binary
 
-    for des in mn1:
-
-        if des >= 0:
-
-            if des - int(des) == 0:
-                dv = ''
-                des = int(des)
-                print(des, end='\t \t')
-
-                while des > 0:
-                    dv = str(des%2) + dv
-                    des //= 2
+def transfer_fract(decimal):                                            # функция перевода дробной части
+    fract = '.'
+    for i in range(3):
+        decimal *= 2
+        digit = int(decimal)
+        decimal -= digit
+        fract += str(digit)
+    return fract
 
 
-            else:
-                ts = ''
-                print(des, end='\t \t')
-                nach = int(des)
-                kon = des - nach
 
-                while nach > 0:
-                    ts = str(nach % 2) + ts
-                    nach //= 2
+print('Введите элементы множеста через пробел, в конце нажмите Enter')
+try:                                                                    # сама программа, где
+    plenty = set(map(float, input().split()))
+    print('Десятичная', 'Двоичная', sep='\t \t')
 
-                dr = '.'
-                for i in range(3):
-                    kon *= 2
-                    dig = int(kon)
-                    kon -= dig
-                    dr += str(dig)
-                dv = ts + dr
+    for number in plenty:
 
-            print(dv)
+        if number >= 0:
 
-        if des < 0:
-            des = abs(des)
-
-            if des - int(des) == 0:
-                dv = ''
-                des = int(des)
-                print(des, end='\t \t')
-
-                while des > 0:
-                    dv = str(des % 2) + dv
-                    des //= 2
+            if number - int(number) == 0:                               # переводятся целые положительные числа
+                number = int(number)
+                print(number, transfer_int(number), sep='\t \t')
 
 
             else:
-                ts = ''
-                print(des, end='\t \t')
-                nach = int(des)
-                kon = des - nach
+                start = int(number)                                     # переводятся смешанные положительные числа
+                end = number - int(number)
 
-                while nach > 0:
-                    ts = str(nach % 2) + ts
-                    nach //= 2
+                tseloe = transfer_int(start)
+                drob = transfer_fract(end)
 
-                dr = '.'
-                for i in range(3):
-                    kon *= 2
-                    dig = int(kon)
-                    kon -= dig
-                    dr += str(dig)
-                dv = ts + dr
+                binary = tseloe + drob
+                print(number, binary, sep='\t \t')
 
+        elif number < 0:
+            number = abs(number)
 
-            print('-', dv, sep='')
+            if number - int(number) == 0:                              # переводятся целые отрицательные числа
+                number = int(number)
+                print('-', number, sep='', end='\t \t')
+                print('-', transfer_int(number), sep='')
 
 
-            
-except:
-    print('Кажется был введен неизвестный символ')
+            else:                                                      # переводятся смешанные отрицательные числа
+                start = int(number)
+                end = number - int(number)
+
+                tseloe = transfer_int(start)
+                drob = transfer_fract(end)
+
+                binary = tseloe + drob
+                print('-', number, sep='', end='\t \t')
+                print('-', binary, sep='')
+
+
+
+except:                                                               # то, что выводится в случае ошибки
+    print('Кажется был введен неподходящий символ')
     print('Хотите посмотреть правила ввода? y/n')
-    otv = input()
+    answ = input()
 
-    if otv == 'y':
+    if answ == 'y':
         print('Программа работает с положительными и отрицательными, целыми и дробными числами')
         print('Числа записываются в одну строку через пробел')
         print('Перед отрицательными числами пишется символ \'-\'')
         print('Дробные числа имеют десятичный вид, пишутся через точку')
 
-    elif otv == 'n':
+    elif answ == 'n':
         print('Если хотите продолжить, запустите программу еще раз')
 
     else:
