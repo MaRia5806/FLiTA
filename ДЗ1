@@ -1,15 +1,18 @@
 import tabulate
 
 def transfer_int(decimal):                                             # функция перевода целой части числа
-    binary = ''
-    while decimal > 0:
-        binary = str(decimal % 2) + binary
-        decimal //= 2
+    if decimal == 0:
+        return 0
+    else:
+        binary = ''
+        while decimal > 0:
+            binary = str(decimal % 2) + binary
+            decimal //= 2
     return binary
 
 def transfer_fract(decimal):                                            # функция перевода дробной части
     fract = '.'
-    for i in range(3):
+    for i in range(7):
         decimal *= 2
         digit = int(decimal)
         decimal -= digit
@@ -62,6 +65,11 @@ try:                                                                    # сам
                 tseloe = transfer_int(start)
                 drob = transfer_fract(end)
 
+                if tseloe == '':
+                    binary = '0' + drob
+                else:
+                    binary = tseloe + drob
+
                 binary = tseloe + drob
                 res.append(['-'+str(number), '-'+str(binary)])
 
@@ -70,7 +78,8 @@ try:                                                                    # сам
 
 except:                                                               # то, что выводится в случае ошибки
     print('Кажется был введен неподходящий символ')
-    print('Хотите посмотреть правила ввода? y/n')
+    print('Хотите посмотреть правила ввода?')
+    print('Введите \'y\' в случае согласия или \'n\' в противном случае')
     answ = input()
 
     if answ == 'y':
