@@ -1,4 +1,4 @@
-?import tabulate
+import tabulate
 
 def transfer_int(decimal):                                             # функция перевода целой части числа
     binary = ''
