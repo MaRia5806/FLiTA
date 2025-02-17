@@ -1,10 +1,10 @@
 import tabulate
 
 def transfer_int(decimal):                                             # функция перевода целой части числа
+    binary = ''
     if decimal == 0:
-        return 0
+        binary = '0'
     else:
-        binary = ''
         while decimal > 0:
             binary = str(decimal % 2) + binary
             decimal //= 2
