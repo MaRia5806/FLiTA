@@ -1,95 +1,159 @@
-import tabulate
+import sys
 
-def transfer_int(decimal):                                             # функция перевода целой части числа
-    binary = ''
-    if decimal == 0:
-        binary = '0'
-    else:
-        while decimal > 0:
-            binary = str(decimal % 2) + binary
-            decimal //= 2
-    return binary
+sys.tracebacklimit = 0
 
-def transfer_fract(decimal):                                            # функция перевода дробной части
-    fract = '.'
-    for i in range(7):
-        decimal *= 2
-        digit = int(decimal)
-        decimal -= digit
-        fract += str(digit)
-    return fract
+class StackError(Exception):
+    def __init__(self, original_exception):
+        super().__init__(f"Error occurred in Stack operation: {str(original_exception)}")
+        self.original_exception = original_exception
 
 
-
-print('Введите элементы множеста через пробел, в конце нажмите Enter')
-try:                                                                    # сама программа, где
-    res = []
-    plenty = set(map(float, input().split()))
-    res.append(['Десятичная', 'Двоичная'])
-
-    for number in plenty:
-
-        if number >= 0:
-
-            if number - int(number) == 0:                               # переводятся целые положительные числа
-                number = int(number)
-                res.append([number, transfer_int(number)])
+class SetError(Exception):
+    def __init__(self, original_exception, operation, element=None):
+        if element:
+            super().__init__(
+                f"Error occurred in Set operation '{operation}' with element '{element}': {str(original_exception)}")
+        else:
+            super().__init__(f"Error occurred in Set operation '{operation}': {str(original_exception)}")
+        self.original_exception = original_exception
+        self.operation = operation
+        self.element = element
 
 
-            else:
-                start = int(number)                                     # переводятся смешанные положительные числа
-                end = number - int(number)
+class StackNode:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
 
-                tseloe = transfer_int(start)
-                drob = transfer_fract(end)
-
-                if tseloe == '':
-                    binary = '0' + drob
-                else:
-                    binary = tseloe + drob
-
-                res.append([number, binary])
-
-        elif number < 0:
-            number = abs(number)
-
-            if number - int(number) == 0:                              # переводятся целые отрицательные числа
-                number = int(number)
-                res.append(['-'+str(number), '-'+str(transfer_int(number))])
+    def __str__(self):
+        return f'Node <{id(self)}>: [{self.data}];'
 
 
-            else:                                                      # переводятся смешанные отрицательные числа
-                start = int(number)
-                end = number - int(number)
+class Stack:
+    def __init__(self):
+        self.top = None
 
-                tseloe = transfer_int(start)
-                drob = transfer_fract(end)
+    def is_empty(self):
+        return self.top is None
 
-                if tseloe == '':
-                    binary = '0' + drob
-                else:
-                    binary = tseloe + drob
+    def push(self, data):
+        try:
+            new_node = StackNode(data)
+            new_node.next = self.top
+            self.top = new_node
+        except Exception as e:
+            raise StackError(e)
 
-                binary = tseloe + drob
-                res.append(['-'+str(number), '-'+str(binary)])
+    def pop(self):
+        try:
+            if self.is_empty():
+                raise IndexError('pop from empty stack')
+            popped_node = self.top
+            self.top = self.top.next
+            return popped_node.data
+        except Exception as e:
+            raise StackError(e)
 
-    print(tabulate.tabulate(res, headers='firstrow', tablefmt='grid'))
+    def peek(self):
+        try:
+            if self.is_empty():
+                raise KeyError('peek from empty stack')
+            return self.top.data
+        except Exception as e:
+            raise StackError(e)
+
+    def __str__(self):
+        values = []
+        current = self.top
+        while current:
+            values.append(str(current.data))
+            current = current.next
+        return f'Stack <{id(self)}>: [{"] -> [".join(values)}];'
 
 
-except:                                                               # то, что выводится в случае ошибки
-    print('Кажется, был введен неподходящий символ')
-    print('Хотите посмотреть правила ввода?')
-    print('Введите \'y\' в случае согласия или \'n\' в противном случае')
-    answ = input()
+class Set:
+    def __init__(self):
+        self.stack = Stack()
 
-    if answ == 'y':
-        print('Программа работает с положительными и отрицательными, целыми и дробными числами')
-        print('Числа записываются в одну строку через пробел')
-        print('Перед отрицательными числами пишется символ \'-\'')
-        print('Дробные числа имеют десятичный вид, пишутся через точку')
+    def add(self, element):
+        try:
+            current = self.stack.top
+            while current:
+                if current.data == element:
+                    return
+                current = current.next
+            self.stack.push(element)
+        except Exception as e:
+            raise SetError(e, 'add', element)
 
-    elif answ == 'n':
-        print('Если хотите продолжить, запустите программу еще раз')
+    def remove(self, element):
+        try:
+            current = self.stack.top
+            prev = None
+            while current:
+                if current.data == element:
+                    if prev:
+                        prev.next = current.next
+                    else:
+                        self.stack.top = current.next
+                    return
+                prev = current
+                current = current.next
+            raise KeyError(f'element {element} not found in the set')
+        except Exception as e:
+            raise SetError(e, 'remove', element)
 
-    else:
-        print('Вы ввели непонятный ответ, попробуйте запустить программу заново')
+    def contains(self, element):
+        try:
+            current = self.stack.top
+            while current:
+                if current.data == element:
+                    return True
+                current = current.next
+            return False
+        except Exception as e:
+            raise SetError(e, 'contains', element)
+
+    def __str__(self):
+        values = []
+        current = self.stack.top
+        while current:
+            values.append(str(current.data))
+            current = current.next
+        return f'Set <{id(self)}>: ({", ".join(values)});'
+
+
+def decimal_to_binary(n):
+    return bin(n)[2:]
+
+
+def transfer(input_set):
+    binary_set = Set()
+    current = input_set.stack.top
+    while current:
+        element = current.data
+        try:
+            if not isinstance(element, int):
+                raise ValueError(f'set element \'{element}\' is not an integer')
+            binary_set.add(decimal_to_binary(element))
+        except Exception as e:
+            raise SetError(e, 'convert_to_binary', element)
+        current = current.next
+    return binary_set
+
+
+# Ввод множества
+input_set = Set()
+elements = input("Введите элементы множества через пробел, затем нажмите Enter: ").split()
+for element in elements:
+    try:
+        input_set.add(int(element))
+    except ValueError:
+        print(f"Элемент '{element}' не является целым числом и не может быть переведен")
+
+# Преобразование множества в двоичное представление
+binary_set = transfer(input_set)
+
+# Вывод исходного и преобразованного множеств
+print("Множество в десятичной сс:", input_set)
+print("Множество в двоичной сс:", binary_set)
