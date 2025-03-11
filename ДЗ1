@@ -123,11 +123,18 @@ class Set:
         return f'Set <{id(self)}>: ({", ".join(values)});'
 
 
-def decimal_to_binary(n):
-    return bin(n)[2:]
+def decimal_to_binary(decimal):
+    if decimal == 0:
+        return 0
+    else:
+        binary = ''
+        while decimal > 0:
+            binary = str(decimal % 2) + binary
+            decimal //= 2
+    return binary
 
 
-def transfer(input_set):
+def convert(input_set):
     binary_set = Set()
     current = input_set.stack.top
     while current:
@@ -152,7 +159,7 @@ for element in elements:
         print(f"Элемент '{element}' не является целым числом и не может быть переведен")
 
 # Преобразование множества в двоичное представление
-binary_set = transfer(input_set)
+binary_set = convert(input_set)
 
 # Вывод исходного и преобразованного множеств
 print("Множество в десятичной сс:", input_set)
